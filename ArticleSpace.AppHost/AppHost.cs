@@ -1,12 +1,14 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder.AddPostgres("postrgres");
-var postgresDb = postgres.AddDatabase("articleSpaceDb");
+var postgresConnectionString = builder.AddConnectionString("DefaultConnection").Resource;
+var database = builder.AddPostgres("postrgres-server")
+	.WithConnectionStringRedirection(postgresConnectionString)
+	.AddDatabase("ArticleSpaceDb");
 
 
 var apiService = builder.AddProject<Projects.ArticleSpace_ApiService>("api")
-	.WaitFor(postgresDb)
-	.WithReference(postgresDb);
+	.WithReference(database)
+	.WaitFor(database);
 
 builder.AddProject<Projects.ArticleSpace_Web>("web")
 	.WithExternalHttpEndpoints()
