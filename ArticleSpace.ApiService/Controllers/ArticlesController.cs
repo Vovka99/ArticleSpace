@@ -9,7 +9,7 @@ namespace ArticleSpace.ApiService.Controllers
 	public class ArticlesController(IArticleService articleService) : ControllerBase
 	{
 		[HttpGet]
-		public async Task<ActionResult<List<Article>>> Get(string title, string tag)
+		public async Task<ActionResult<List<Article>>> Get(string? title, string? tag)
 		{
 			var articles = await articleService.Get(title, tag);
 			return Ok(articles);
