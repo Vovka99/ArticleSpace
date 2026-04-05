@@ -11,14 +11,14 @@ namespace ArticleSpace.ApiService.Controllers
 		[HttpGet]
 		public async Task<ActionResult<List<Article>>> Get(string title, string tag)
 		{
-			var articles = await articleService.GetAllAsync();
+			var articles = await articleService.Get(title, tag);
 			return Ok(articles);
 		}
 
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Article>> Get(string id)
 		{
-			var article = await articleService.GetByIdAsync(id);
+			var article = await articleService.GetById(id);
 			if (article == null) return NotFound();
 
 			return Ok(article);
@@ -27,14 +27,14 @@ namespace ArticleSpace.ApiService.Controllers
 		[HttpPost]
 		public async Task<ActionResult<string>> Create(CreateArticleRequest createRequest)
 		{
-			var id = await articleService.CreateAsync(createRequest);
+			var id = await articleService.Create(createRequest);
 			return CreatedAtAction(nameof(Get), new { id }, id);
 		}
 
 		[HttpPut("{id}")]
 		public async Task<ActionResult> Update(string id, UpdateArticleRequest updateRequest)
 		{
-			await articleService.UpdateAsync(id, updateRequest);
+			await articleService.Update(id, updateRequest);
 			
 			return NoContent();
 		}
@@ -42,7 +42,7 @@ namespace ArticleSpace.ApiService.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> Delete(string id)
 		{
-			await articleService.DeleteAsync(id);
+			await articleService.Delete(id);
 			return NoContent();
 		}
 	}

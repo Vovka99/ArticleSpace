@@ -6,17 +6,30 @@ namespace ArticleSpace.ApiService.Services
 {
 	public class ArticleService(AppDbContext context) : IArticleService
 	{
-		public async Task<List<Article>> GetAllAsync()
+		public async Task<List<Article>> Get(string title, string tag)
 		{
-			return await context.Articles.ToListAsync();
+			var query = context.Articles.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(title))
+			{
+				var pattern = $"%{title}%";
+				query = query.Where(a => EF.Functions.ILike(a.Title, pattern));
+			}
+
+			if(!string.IsNullOrWhiteSpace(tag))
+			{
+				query = query.Where(a => a.Tag == tag);
+			}
+
+			return await query.ToListAsync();
 		}
 
-		public async Task<Article?> GetByIdAsync(string id)
+		public async Task<Article?> GetById(string id)
 		{
 			return await context.Articles.FindAsync(id);
 		}
 
-		public async Task<string> CreateAsync(CreateArticleRequest request)
+		public async Task<string> Create(CreateArticleRequest request)
 		{
 			var article = new Article
 			{
@@ -34,7 +47,7 @@ namespace ArticleSpace.ApiService.Services
 			return article.Id;
 		}
 
-		public async Task UpdateAsync(string id, UpdateArticleRequest request)
+		public async Task Update(string id, UpdateArticleRequest request)
 		{
 			var article = await context.Articles.FindAsync(id);
 			if (article == null)
@@ -50,7 +63,7 @@ namespace ArticleSpace.ApiService.Services
 			await context.SaveChangesAsync();
 		}
 
-		public async Task DeleteAsync(string id)
+		public async Task Delete(string id)
 		{
 			var article = await context.Articles.FindAsync(id);
 			if (article == null)

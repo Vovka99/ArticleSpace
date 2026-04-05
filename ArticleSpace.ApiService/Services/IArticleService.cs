@@ -4,10 +4,10 @@ namespace ArticleSpace.ApiService.Services
 {
 	public interface IArticleService
 	{
-		Task<string> CreateAsync(CreateArticleRequest request);
-		Task DeleteAsync(string id);
-		Task<List<Article>> GetAllAsync();
-		Task<Article?> GetByIdAsync(string id);
-		Task UpdateAsync(string id, UpdateArticleRequest request);
+		Task<string> Create(CreateArticleRequest request);
+		Task Delete(string id);
+		Task<List<Article>> Get(string title, string tag);
+		Task<Article?> GetById(string id);
+		Task Update(string id, UpdateArticleRequest request);
 	}
 }
