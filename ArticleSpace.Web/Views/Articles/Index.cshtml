@@ -1,0 +1,30 @@
+﻿@model IEnumerable<ArticleViewModel>
+
+@{
+	ViewData["Title"] = "Articles";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (!Model.Any())
+{
+    <p>No articles found.</p>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var a in Model)
+        {
+            <div class="list-group-item mb-2">
+                <h5>@a.Title</h5>
+                <div class="text-muted mb-1">
+                    <span>@a.Tag</span> |
+                    <span>@a.Status</span> |
+                    <small>@a.CreatedAt.ToString("g")</small>
+                </div>
+                <p>@(a.Content?.Length > 250 ? a.Content.Substring(0, 250) + "…" : a.Content)</p>
+                <a class="btn btn-sm btn-link" asp-controller="Articles" asp-action="Details" asp-route-id="@a.Id">Read more</a>
+            </div>
+        }
+    </div>
+}
