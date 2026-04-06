@@ -2,9 +2,32 @@
 
 @{
 	ViewData["Title"] = "Articles";
+    
+    var query = ViewData["Query"] as string ?? string.Empty;
+    var tag = ViewData["Tag"] as string ?? string.Empty;
 }
 
 <h1>@ViewData["Title"]</h1>
+
+<form class="mb-3" method="get" asp-controller="Articles" asp-action="Index">
+    <div class="row g-2">
+        <div class="col-md-6">
+            <input type="search" name="search" class="form-control" placeholder="Search by title..." value="@query" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="tag" class="form-control" placeholder="Tag" value="@tag" />
+        </div>
+        <div class="col-md-3">
+            <div class="d-flex">
+                <button class="btn btn-primary me-2" type="submit">Search</button>
+                @if (!string.IsNullOrEmpty(query) || !string.IsNullOrEmpty(tag))
+                {
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Articles")">Clear</a>
+                }
+            </div>
+        </div>
+    </div>
+</form>
 
 @if (!Model.Any())
 {

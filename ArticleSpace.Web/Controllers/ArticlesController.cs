@@ -1,13 +1,16 @@
 ﻿using ArticleSpace.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace ArticleSpace.Web.Controllers
 {
     public class ArticlesController(IHttpClientFactory httpClientFactory, ILogger<ArticlesController> logger) 
         : Controller
     {
-        public async Task<ActionResult> Index()
+        [Route("/")]
+        [Route("articles")]
+        [Route("articles/tag/{tag}")]
+        [Route("articles/search/{search}")]
+        public async Task<ActionResult> Index(string search, string tag)
         {
             var client = httpClientFactory.CreateClient("ArticleSpaceApi");
 
@@ -15,7 +18,24 @@ namespace ArticleSpace.Web.Controllers
 
             try
             {
-                var result = await client.GetFromJsonAsync<List<ArticleViewModel>>("articles");
+                var url = "articles";
+                var queryParts = new List<string>();
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    queryParts.Add($"title={search}");
+                }
+
+                if (!string.IsNullOrWhiteSpace(tag))
+                {
+                    queryParts.Add($"tag={tag}");
+                }
+
+                if (queryParts.Count > 0)
+                {
+                    url += "?" + string.Join("&", queryParts);
+                }
+
+                var result = await client.GetFromJsonAsync<List<ArticleViewModel>>(url);
                 if (result is not null)
                 {
                     articles = result;
@@ -26,6 +46,8 @@ namespace ArticleSpace.Web.Controllers
                 logger.LogError(exc, "Error fetching articles from API");
             }
 
+            ViewData["Query"] = search ?? string.Empty;
+            ViewData["Tag"] = tag ?? string.Empty;
             return View(articles);
         }
 
@@ -54,13 +76,6 @@ namespace ArticleSpace.Web.Controllers
             }
 
             return View(article);
-        }
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
