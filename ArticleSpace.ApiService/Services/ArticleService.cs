@@ -16,7 +16,7 @@ namespace ArticleSpace.ApiService.Services
 				query = query.Where(a => EF.Functions.ILike(a.Title, pattern));
 			}
 
-			if(!string.IsNullOrWhiteSpace(tag))
+			if (!string.IsNullOrWhiteSpace(tag))
 			{
 				query = query.Where(a => a.Tag == tag);
 			}
