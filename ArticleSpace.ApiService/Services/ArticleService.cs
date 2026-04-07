@@ -1,12 +1,13 @@
 ﻿using ArticleSpace.ApiService.Data;
 using ArticleSpace.ApiService.Entities;
+using ArticleSpace.ApiService.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArticleSpace.ApiService.Services
 {
 	public class ArticleService(AppDbContext context) : IArticleService
 	{
-		public async Task<List<Article>> Get(string title, string tag)
+		public async Task<List<ArticleDto>> Get(string title, string tag)
 		{
 			var query = context.Articles.AsQueryable();
 
@@ -21,13 +22,15 @@ namespace ArticleSpace.ApiService.Services
 				query = query.Where(a => a.Tag == tag);
 			}
 
-			return await query.ToListAsync();
-		}
+			var articles = await query.ToListAsync();
+            return articles.Select(MapToDto).ToList();
+        }
 
-		public async Task<Article?> GetById(string id)
+		public async Task<ArticleDto> GetById(string id)
 		{
-			return await context.Articles.FindAsync(id);
-		}
+            var article = await context.Articles.FindAsync(id);
+            return MapToDto(article);
+        }
 
 		public async Task<string> Create(CreateArticleRequest request)
 		{
@@ -37,7 +40,7 @@ namespace ArticleSpace.ApiService.Services
 				Title = request.Title,
 				Content = request.Content,
 				CreatedAt = DateTime.UtcNow,
-				Status = PublicationStatus.Draft,
+				Status = Entities.PublicationStatus.Draft,
 				Tag = request.Tag
 			};
 
@@ -74,5 +77,18 @@ namespace ArticleSpace.ApiService.Services
 			context.Articles.Remove(article);
 			await context.SaveChangesAsync();
 		}
-	}
+
+		private ArticleDto MapToDto(Article article)
+		{
+			return new ArticleDto
+			{
+				Id = article.Id,
+				Title = article.Title,
+				Content = article.Content,
+				CreatedAt = article.CreatedAt,
+				Status = (Models.PublicationStatus)article.Status,
+				Tag = article.Tag
+			};
+        }
+    }
 }

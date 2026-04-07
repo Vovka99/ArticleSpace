@@ -1,6 +1,5 @@
-﻿using ArticleSpace.ApiService.Entities;
+﻿using ArticleSpace.ApiService.Models;
 using ArticleSpace.ApiService.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleSpace.ApiService.Controllers
@@ -10,14 +9,14 @@ namespace ArticleSpace.ApiService.Controllers
     public class ProductsController(IProductService productService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> Get(string? title, string? tag)
+        public async Task<ActionResult<List<ProductDto>>> Get(string? title, string? tag)
         {
             var articles = await productService.Get(title, tag);
             return Ok(articles);
         }
 
         [HttpGet("{id:long}")]
-        public async Task<ActionResult<Product>> Get(long id)
+        public async Task<ActionResult<ProductDto>> Get(long id)
         {
             var article = await productService.GetById(id);
             if (article == null) return NotFound();

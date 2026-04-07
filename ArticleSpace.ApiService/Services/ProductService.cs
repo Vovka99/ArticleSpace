@@ -1,12 +1,13 @@
 ﻿using ArticleSpace.ApiService.Data;
 using ArticleSpace.ApiService.Entities;
+using ArticleSpace.ApiService.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArticleSpace.ApiService.Services
 {
     public class ProductService(AppDbContext context, IExternalStoreService externalStoreService) : IProductService
     {
-        public async Task<List<Product>> Get(string title, string category)
+        public async Task<List<ProductDto>> Get(string title, string category)
         {
             var query = context.Products.AsQueryable();
 
@@ -21,12 +22,15 @@ namespace ArticleSpace.ApiService.Services
                 query = query.Where(a => a.Category == category);
             }
 
-            return await query.ToListAsync();
+            var products = await query.ToListAsync();
+            
+            return products.Select(MapToDto).ToList();
         }
 
-        public async Task<Product?> GetById(long id)
+        public async Task<ProductDto> GetById(long id)
         {
-            return await context.Products.FindAsync(id);
+            var product = await context.Products.FindAsync(id);
+            return MapToDto(product);
         }
 
         public async Task SyncProducts()
@@ -65,6 +69,26 @@ namespace ArticleSpace.ApiService.Services
             }
 
             await context.SaveChangesAsync();
+        }
+
+        private ProductDto MapToDto(Product product)
+        {
+            if (product == null) return null;
+
+            return new ProductDto
+            {
+                Id = product.Id,
+                Title = product.Title,
+                Category = product.Category,
+                Price = product.Price,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                Rating = new Rating
+                {
+                    Rate = product.Rate,
+                    Count = product.RatingCount
+                }
+            };
         }
     }
 }

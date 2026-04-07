@@ -1,4 +1,4 @@
-﻿using ArticleSpace.ApiService.Entities;
+﻿using ArticleSpace.ApiService.Models;
 
 namespace ArticleSpace.ApiService.Services
 {
@@ -6,8 +6,8 @@ namespace ArticleSpace.ApiService.Services
 	{
 		Task<string> Create(CreateArticleRequest request);
 		Task Delete(string id);
-		Task<List<Article>> Get(string title, string tag);
-		Task<Article?> GetById(string id);
+		Task<List<ArticleDto>> Get(string title, string tag);
+		Task<ArticleDto> GetById(string id);
 		Task Update(string id, UpdateArticleRequest request);
 	}
 }
