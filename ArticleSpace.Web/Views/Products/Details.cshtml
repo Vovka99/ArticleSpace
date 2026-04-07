@@ -1,0 +1,31 @@
+﻿@model ProductViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="row g-4">
+    <div class="col-md-5">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid rounded" style="object-fit:contain; width:100%; height:400px;" />
+        }
+    </div>
+    <div class="col-md-7">
+        <h1>@Model.Title</h1>
+        <p class="text-muted">@Model.Category</p>
+        <h3 class="text-primary">@Model.Price.ToString("C")</h3>
+
+        <div class="mb-3">
+            <strong>Rating:</strong> <span class="text-muted">★ @Model.Rating.Rate (@Model.Rating.Count)</span>
+        </div>
+
+        <article>
+            <p>@Model.Description</p>
+        </article>
+
+        <div class="mt-4">
+            <a asp-controller="Products" asp-action="Index" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+</div>
