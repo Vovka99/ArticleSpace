@@ -1,9 +1,19 @@
 ﻿using ArticleSpace.ApiService.Entities;
+using System.ComponentModel.DataAnnotations;
 
 public class UpdateArticleRequest
 {
-	public string Title { get; set; }
-	public string Content { get; set; }
-	public PublicationStatus Status { get; set; }
-	public string Tag { get; set; }
+    [Required]
+    [StringLength(250, MinimumLength = 3)]
+    public string Title { get; set; }
+
+    [Required]
+    [StringLength(5000, MinimumLength = 10)]
+    public string Content { get; set; }
+
+    [EnumDataType(typeof(PublicationStatus))]
+    public PublicationStatus Status { get; set; }
+
+    [StringLength(100)]
+    public string Tag { get; set; }
 }
