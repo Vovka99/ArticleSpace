@@ -10,9 +10,9 @@ namespace ArticleSpace.ApiService.Controllers
     public class ProductsController(IProductService productService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<ProductDto>>> Get(string? title, string? tag)
+        public async Task<ActionResult<List<ProductDto>>> Get(string? title, string? category)
         {
-            var articles = await productService.Get(title, tag);
+            var articles = await productService.Get(title, category);
             return Ok(articles);
         }
 
