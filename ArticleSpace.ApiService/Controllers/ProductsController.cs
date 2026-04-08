@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ArticleSpace.ApiService.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [ApiVersion("1.0")]
+    [Route("v/{version:apiVersion}/[controller]")]
     public class ProductsController(IProductService productService) : ControllerBase
     {
         [HttpGet]

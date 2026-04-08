@@ -5,17 +5,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace ArticleSpace.ApiService.Controllers
 {
 	[ApiController]
-	[Route("[controller]")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[controller]")]
 	public class ArticlesController(IArticleService articleService) : ControllerBase
 	{
-		[HttpGet]
-		public async Task<ActionResult<List<ArticleDto>>> Get(string? title, string? tag)
+        [HttpGet]
+        public async Task<ActionResult<List<ArticleDto>>> Get(string? title, string? tag)
 		{
 			var articles = await articleService.Get(title, tag);
 			return Ok(articles);
 		}
 
-		[HttpGet("{id}")]
+        [HttpGet("{id}")]
 		public async Task<ActionResult<ArticleDto>> Get(string id)
 		{
 			var article = await articleService.GetById(id);

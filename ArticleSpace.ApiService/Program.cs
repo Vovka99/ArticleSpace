@@ -1,6 +1,7 @@
 using ArticleSpace.ApiService;
 using ArticleSpace.ApiService.Data;
 using ArticleSpace.ApiService.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -9,6 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddApiVersioning(options =>
+{
+	options.AssumeDefaultVersionWhenUnspecified = true;
+	options.DefaultApiVersion = new ApiVersion(1, 0);
+	options.ReportApiVersions = true;
+});
 
 builder.Services.AddHttpClient("ExternalStoreApi", client =>
 {
