@@ -7,46 +7,56 @@
     var tag = ViewData["Tag"] as string ?? string.Empty;
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<form class="mb-3" method="get" asp-controller="Articles" asp-action="Index">
-    <div class="row g-2">
-        <div class="col-md-6">
-            <input type="search" name="search" class="form-control" placeholder="Search by title..." value="@query" />
-        </div>
-        <div class="col-md-3">
-            <input type="text" name="tag" class="form-control" placeholder="Tag" value="@tag" />
-        </div>
-        <div class="col-md-3">
-            <div class="d-flex">
-                <button class="btn btn-primary me-2" type="submit">Search</button>
-                @if (!string.IsNullOrEmpty(query) || !string.IsNullOrEmpty(tag))
-                {
-                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Articles")">Clear</a>
-                }
+<div class="mb-3">
+    <form class="row g-2" method="get" asp-controller="Articles" asp-action="Index" role="search" aria-label="Search articles">
+        <div class="col-md-10">
+            <div class="input-group">
+                <input name="search" type="search" class="form-control form-control-sm" placeholder="Search by title..." value="@query" />
+                <input type="text" name="tag" class="form-control form-control-sm" placeholder="Tag" value="@tag" />
+                <button class="btn btn-sm btn-primary" type="submit">Search</button>
             </div>
         </div>
-    </div>
-</form>
+        <div class="col-md-2 d-flex">
+            @if (!string.IsNullOrEmpty(query) || !string.IsNullOrEmpty(tag))
+            {
+                <a class="btn btn-outline-secondary btn-sm w-100" href="@Url.Action("Index", "Articles")">Clear</a>
+            }
+        </div>
+    </form>
+</div>
 
 @if (!Model.Any())
 {
-    <p>No articles found.</p>
+    <div class="empty-state">
+        <h5>No articles found</h5>
+        <p class="mb-2">Try another search or check back later.</p>
+    </div>
 }
 else
 {
-    <div class="list-group">
+    <div class="row g-3">
         @foreach (var a in Model)
         {
-            <div class="list-group-item mb-2">
-                <h5>@a.Title</h5>
-                <div class="text-muted mb-1">
-                    <span>@a.Tag</span> |
-                    <span>@a.Status</span> |
-                    <small>@a.CreatedAt.ToString("g")</small>
+            <div class="col-12">
+                <div class="card card-hover">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="card-title mb-1">@a.Title</h5>
+                                <div class="text-muted small mb-2">
+                                    <span class="badge badge-tag me-2">@a.Tag</span>
+                                    <span class="me-2">@a.Status</span>
+                                    <small>@a.CreatedAt.ToString("g")</small>
+                                </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-sm btn-link" asp-controller="Articles" asp-action="Details" asp-route-id="@a.Id">Read more</a>
+                            </div>
+                        </div>
+
+                        <p class="card-text mt-2">@((a.Content?.Length > 280) ? a.Content.Substring(0, 280) + "…" : a.Content)</p>
+                    </div>
                 </div>
-                <p>@(a.Content?.Length > 250 ? a.Content.Substring(0, 250) + "…" : a.Content)</p>
-                <a class="btn btn-sm btn-link" asp-controller="Articles" asp-action="Details" asp-route-id="@a.Id">Read more</a>
             </div>
         }
     </div>

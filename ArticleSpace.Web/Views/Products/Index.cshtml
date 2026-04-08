@@ -7,57 +7,67 @@
 	var category = ViewData["Category"] as string ?? string.Empty;
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="mb-3">
+    <form class="row g-2" method="get" asp-controller="Products" asp-action="Index" role="search" aria-label="Search products">
+        <div class="col-md-10">
+            <div class="input-group">
+                <input autofocus name="search" type="search" class="form-control form-control-sm" placeholder="Search by title..." value="@query" />
+                <input type="text" name="category" class="form-control form-control-sm" placeholder="Category" value="@category" />
+                <button class="btn btn-sm btn-primary" type="submit">Search</button>
+            </div>
+        </div>
+        <div class="col-md-2 d-flex">
+            @if (!string.IsNullOrEmpty(query) || !string.IsNullOrEmpty(category))
+            {
+                <a class="btn btn-outline-secondary btn-sm w-100" href="@Url.Action("Index", "Products")">Clear</a>
+            }
+        </div>
+    </form>
+</div>
 
 @if (!Model.Any())
 {
-	<p>No products found.</p>
+    <div class="empty-state">
+        <h5>No products found</h5>
+        <p class="mb-2">Try a different search or browse our categories.</p>
+    </div>
 }
 else
 {
-	<form class="mb-3" method="get" asp-controller="Products" asp-action="Index">
-		<div class="row g-2">
-			<div class="col-md-6">
-				<input type="search" name="search" class="form-control" placeholder="Search by title..." value="@query" />
-			</div>
-			<div class="col-md-3">
-				<input type="text" name="category" class="form-control" placeholder="Category" value="@category" />
-			</div>
-			<div class="col-md-3">
-				<div class="d-flex">
-					<button class="btn btn-primary me-2" type="submit">Search</button>
-					@if (!string.IsNullOrEmpty(query) || !string.IsNullOrEmpty(category))
-					{
-						<a class="btn btn-outline-secondary" href="@Url.Action("Index", "Products")">Clear</a>
-					}
-				</div>
-			</div>
-		</div>
-	</form>
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+        @foreach (var p in Model)
+        {
+            <div class="col">
+                <div class="card h-100 card-hover">
+                    @if (!string.IsNullOrEmpty(p.ImageUrl))
+                    {
+                        <img src="@p.ImageUrl" class="img-aspect card-img-top" alt="@p.Title" />
+                    }
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">@p.Title</h5>
+                            <span class="badge badge-category">@p.Category</span>
+                        </div>
 
-	<div class="row row-cols-1 row-cols-md-3 g-3">
-		@foreach (var p in Model)
-		{
-			<div class="col">
-				<div class="card h-100">
-					@if (!string.IsNullOrEmpty(p.ImageUrl))
-					{
-						<img src="@p.ImageUrl" class="card-img-top" alt="@p.Title" style="object-fit:contain;height:180px;" />
-					}
-					<div class="card-body d-flex flex-column">
-						<h5 class="card-title">@p.Title</h5>
-						<p class="card-text text-muted mb-1">@p.Category</p>
-						<p class="card-text mb-2">@((p.Description?.Length > 200) ? p.Description.Substring(0, 200) + "…" : p.Description)</p>
-						<div class="mt-auto d-flex justify-content-between align-items-center">
-							<span class="fw-bold">@p.Price.ToString("C")</span>
-							<small class="text-muted">★ @p.Rating.Rate (@p.Rating.Count)</small>
-						</div>
-						<div class="mt-3">
-							<a asp-controller="Products" asp-action="Details" asp-route-id="@p.Id" class="btn btn-sm btn-primary">View</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		}
-	</div>
+                        <p class="card-text text-muted mb-2 small">@((p.Description?.Length > 160) ? p.Description.Substring(0, 160) + "…" : p.Description)</p>
+
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="fw-bold">@p.Price.ToString("C")</span>
+                            </div>
+                            <div class="text-muted small">
+                                <span class="rating-star">★</span>
+                                <span>@p.Rating.Rate.ToString("0.0")</span>
+                                <small class="text-muted">(@p.Rating.Count)</small>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@p.Id" class="btn btn-sm btn-primary me-2">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }

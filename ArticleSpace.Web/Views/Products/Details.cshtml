@@ -4,16 +4,16 @@
     ViewData["Title"] = Model.Title;
 }
 
-<div class="row g-4">
-    <div class="col-md-5">
+<div class="row g-4 justify-content-center">
+    <div class="col-md-6">
         @if (!string.IsNullOrEmpty(Model.ImageUrl))
         {
-            <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid rounded" style="object-fit:contain; width:100%; height:400px;" />
+            <img src="@Model.ImageUrl" alt="@Model.Title" class="product-image-large" />
         }
     </div>
-    <div class="col-md-7">
+    <div class="col-md-6">
         <h1>@Model.Title</h1>
-        <p class="text-muted">@Model.Category</p>
+        <p class="badge badge-category">@Model.Category</p>
         <h3 class="text-primary">@Model.Price.ToString("C")</h3>
 
         <div class="mb-3">
