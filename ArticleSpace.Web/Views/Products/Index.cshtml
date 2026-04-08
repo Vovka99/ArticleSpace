@@ -2,6 +2,9 @@
 
 @{
 	ViewData["Title"] = "Products";
+
+	var query = ViewData["Query"] as string ?? string.Empty;
+	var category = ViewData["Category"] as string ?? string.Empty;
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -12,6 +15,26 @@
 }
 else
 {
+	<form class="mb-3" method="get" asp-controller="Products" asp-action="Index">
+		<div class="row g-2">
+			<div class="col-md-6">
+				<input type="search" name="search" class="form-control" placeholder="Search by title..." value="@query" />
+			</div>
+			<div class="col-md-3">
+				<input type="text" name="category" class="form-control" placeholder="Category" value="@category" />
+			</div>
+			<div class="col-md-3">
+				<div class="d-flex">
+					<button class="btn btn-primary me-2" type="submit">Search</button>
+					@if (!string.IsNullOrEmpty(query) || !string.IsNullOrEmpty(category))
+					{
+						<a class="btn btn-outline-secondary" href="@Url.Action("Index", "Products")">Clear</a>
+					}
+				</div>
+			</div>
+		</div>
+	</form>
+
 	<div class="row row-cols-1 row-cols-md-3 g-3">
 		@foreach (var p in Model)
 		{
