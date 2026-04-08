@@ -13,7 +13,7 @@ namespace ArticleSpace.Web.Controllers
 
             try
             {
-                var url = "products";
+                var url = "v1/products";
                 var queryParts = new List<string>();
                 if (!string.IsNullOrWhiteSpace(search))
                 {
@@ -53,7 +53,7 @@ namespace ArticleSpace.Web.Controllers
 
             try
             {
-                product = await client.GetFromJsonAsync<ProductViewModel>($"products/{id}");
+                product = await client.GetFromJsonAsync<ProductViewModel>($"v1/products/{id}");
             }
             catch (HttpRequestException exc)
             {
