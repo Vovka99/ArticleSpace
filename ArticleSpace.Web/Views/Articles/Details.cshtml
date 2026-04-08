@@ -1,21 +1,23 @@
 ﻿@model ArticleViewModel
 
 @{
-    ViewData["Title"] = Model.Title;
+	ViewData["Title"] = Model.Title;
 }
 
-<div class="mb-3">
-    <div class="text-muted mb-2">
-        <span class="badge badge-tag me-2">@Model.Tag</span>
-        <span class="me-2">@Model.Status</span>
-        <small>@Model.CreatedAt.ToString("g")</small>
-    </div>
-</div>
+<div class="row justify-content-center">
+	<div class="col-12 col-md-8 col-lg-6">
+		<div class="text-muted mb-3">
+			<span class="badge badge-tag me-2">@Model.Tag</span>
+			<span class="me-2">@Model.Status</span>
+			<small>@Model.CreatedAt.ToString("g")</small>
+		</div>
 
-<article class="article-body">
-    @Model.Content
-</article>
+		<article class="article-body">
+			@Model.Content
+		</article>
 
-<div class="mt-4">
-    <a asp-controller="Articles" asp-action="Index" class="btn btn-sm btn-secondary">Back</a>
+		<div class="mt-4">
+			<a asp-controller="Articles" asp-action="Index" class="btn btn-sm btn-secondary">Back</a>
+		</div>
+	</div>
 </div>
