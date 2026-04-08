@@ -1,7 +1,6 @@
 ﻿using ArticleSpace.ApiService.Data;
-using ArticleSpace.ApiService.Services;
 
-namespace ArticleSpace.ApiService
+namespace ArticleSpace.ApiService.Services.Hosted
 {
     public class ProductSyncHostedService(IServiceProvider serviceProvider) : IHostedService
     {

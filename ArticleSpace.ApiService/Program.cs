@@ -1,6 +1,6 @@
-using ArticleSpace.ApiService;
 using ArticleSpace.ApiService.Data;
 using ArticleSpace.ApiService.Services;
+using ArticleSpace.ApiService.Services.Hosted;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
